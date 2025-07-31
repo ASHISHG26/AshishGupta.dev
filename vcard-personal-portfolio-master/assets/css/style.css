@@ -353,7 +353,16 @@ main {
   padding: 3px 12px;
   border-radius: 8px;
 }
-
+.info-content .resume {
+  color: var(--white-1);
+  background: var(--onyx);
+  font-size: var(--fs-8);
+  font-weight: var(--fw-300);
+  width: max-content;
+  height: max-content;
+  padding: 5px 12px;
+  border-radius: 8px;
+}
 .info_more-btn {
   position: absolute;
   top: -15px;
@@ -848,10 +857,10 @@ main {
   margin-bottom: 8px;
 }
 
-.skill .title-wrapper data {
-  color: var(--light-gray);
-  font-size: var(--fs-7);
-  font-weight: var(--fw-300);
+.skill .skills-title data {
+  color: var(--vegas-gold);
+  font-weight: var(--fw-400);
+  line-height: 1.6;
 }
 
 .skill-progress-bg {
