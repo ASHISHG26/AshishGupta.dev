@@ -115,26 +115,58 @@ for (let i = 0; i < filterBtn.length; i++) {
 
 
 
-// contact form variables
 const form = document.querySelector("[data-form]");
-const formInputs = document.querySelectorAll("[data-form-input]");
 const formBtn = document.querySelector("[data-form-btn]");
 
-// add event to all form input field
-for (let i = 0; i < formInputs.length; i++) {
-  formInputs[i].addEventListener("input", function () {
+formBtn.disabled = !form.checkValidity();
 
-    // check form validation
-    if (form.checkValidity()) {
-      formBtn.removeAttribute("disabled");
+form.addEventListener("input", () => {
+  formBtn.disabled = !form.checkValidity();
+});
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  formBtn.disabled = true;
+
+  // Build URL-encoded payload (no JSON, avoids preflight)
+  const params = new URLSearchParams();
+  params.append("name", form.elements["name"].value.trim());
+  params.append("email", form.elements["email"].value.trim());
+  params.append("message", form.elements["message"].value.trim());
+
+  try {
+    const resp = await fetch(
+      "https://script.google.com/macros/s/AKfycbwadlCg3ZuXofGJr_rsYYvWrL6dMDLtcy0JFiUuDgZJYaz00yZ2agnvslamoWAZQKKR/exec",
+      {
+        method: "POST",
+        body: params, // browser sets content-type automatically
+      }
+    );
+
+    const text = await resp.text();
+
+    if (!resp.ok) {
+      console.error("Server error:", resp.status, text);
+      alert("Error submitting form. Server responded with an error.");
     } else {
-      formBtn.setAttribute("disabled", "");
+      console.log("Success response:", text);
+      alert("Form submitted!");
+      form.reset();
+      formBtn.disabled = true;
     }
-
-  });
-}
-
-
+  } catch (err) {
+    console.error("Fetch exception:", err);
+    alert("Error submitting form. Check console for details.");
+  } finally {
+    formBtn.disabled = !form.checkValidity();
+  }
+});
 
 // page navigation variables
 const navigationLinks = document.querySelectorAll("[data-nav-link]");
